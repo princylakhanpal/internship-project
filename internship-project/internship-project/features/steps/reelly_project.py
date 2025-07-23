@@ -20,11 +20,11 @@ def input_password(context, password):
 @when('Click continue button')
 def click_continue_button(context):
     context.app.reelly_project.click_continue_button()
-    sleep(5)
 
 @when('Click on settings at the left side menu')
 def click_settings_menu(context):
     context.app.reelly_project.click_settings_menu()
+
 
 @when('Click on the verification option')
 def click_verification_option(context):
