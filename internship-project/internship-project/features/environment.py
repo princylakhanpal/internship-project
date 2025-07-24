@@ -12,9 +12,33 @@ from selenium.webdriver.support.wait import WebDriverWait
 from app.application import Application
 
 
-def browser_init(context, scenario):
-    options = FirefoxOptions()
-    options.headless = False
+def browser_init(context, scenario_name):
+    """
+    :param context: Behave context
+    """
+
+### BROWSERSTACK ###
+# Register for BrowserStack, then grab it from https://www.browserstack.com/accounts/settings
+    bs_user ='princylakhanpal_jS1l5x'
+    bs_key ='Gyf8WsgqwyPpvyx4jwrD'
+    url = f'http://{bs_user}:{bs_key}@hub-cloud.browserstack.com/wd/hub'
+
+    options = ChromeOptions()
+    bstack_options = {
+        "os" : "OS X",
+        "osVersion" : "Monterey",
+        'browserName': 'Chrome',
+        'sessionName': scenario_name,
+        "browserVersion": "latest",
+    }
+    options.set_capability('bstack:options', bstack_options)
+    context.driver = webdriver.Remote(command_executor=url, options=options)
+
+# driver_path = ChromeDriverManager().install()
+# service = Service(driver_path)
+# context.driver = webdriver.Chrome(service=service)
+    #options = FirefoxOptions()
+    #options.headless = False
     #"""Initialize headless Chrome browser."""
     #options = ChromeOptions()
     #options.add_argument("--headless")
@@ -25,8 +49,8 @@ def browser_init(context, scenario):
     #service = ChromeService(ChromeDriverManager().install())
     #context.driver = webdriver.Chrome(service=service, options=options)
 
-    service = FirefoxService(GeckoDriverManager().install())
-    context.driver = webdriver.Firefox(service=service, options=options)
+    #service = FirefoxService(GeckoDriverManager().install())
+   # context.driver = webdriver.Firefox(service=service, options=options)
     context.driver.maximize_window()
     context.driver.implicitly_wait(4)
     context.driver.wait = WebDriverWait(context.driver, 20)
