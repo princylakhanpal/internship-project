@@ -9,8 +9,8 @@ class ReellyProject(Page):
     EMAIL_ID = (By.ID, "email-2")
     PASSWORD = (By.CSS_SELECTOR, '[data-name="Password"]')
     CONTINUE_BTN = (By.CSS_SELECTOR, '[wized="loginButton"]')
-    VERIFICATION_OPTION = (By.CSS_SELECTOR, '[href*="/verification"]')
-    SETTINGS_MENU = (By.XPATH, '//div[@class="g-menu-text" and text()="Settings"]')
+    VERIFICATION_OPTION = (By.CSS_SELECTOR, '[href="/verification/step-0"]')
+    SETTINGS_MENU = (By.CSS_SELECTOR, '[href="/settings"][class*="new-market-menu"]')
     BLOCK_TXT = (By.CSS_SELECTOR, ".step-1-block")
 
     def open_main_page (self):
@@ -40,8 +40,17 @@ class ReellyProject(Page):
         sleep(3)
 
     def click_verification_option(self):
-        self.click(*self.VERIFICATION_OPTION)
-        sleep(3)
+        WebDriverWait(self.driver, 20).until(
+            EC.presence_of_element_located(self.VERIFICATION_OPTION)
+        )
+
+        element = self.driver.find_element(*self.VERIFICATION_OPTION)
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
+        WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable(self.VERIFICATION_OPTION)
+        )
+
+        element.click()
 
     def verify_upload_your_photo_page(self):
         self.verify_partial_text("Upload your photo", *self.BLOCK_TXT)

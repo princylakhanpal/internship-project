@@ -17,6 +17,10 @@ def browser_init(context, scenario_name):
     :param context: Behave context
     """
     options = ChromeOptions()
+    mobile_emulation = {"deviceName": "Nexus 5"}
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
+
     ### BROWSERSTACK ###
     # Register for BrowserStack, then grab it from https://www.browserstack.com/accounts/settings
     # bs_user ='princylakhanpal_jS1l5x'
@@ -47,7 +51,7 @@ def browser_init(context, scenario_name):
 
     #service = FirefoxService(GeckoDriverManager().install())
     #context.driver = webdriver.Firefox(service=service, options=options)
-    context.driver.maximize_window()
+    #context.driver.maximize_window()
     context.driver.implicitly_wait(4)
     context.driver.wait = WebDriverWait(context.driver, 20)
     context.app = Application(context.driver)
