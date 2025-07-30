@@ -7,6 +7,6 @@ Feature: Tests to verify upload image and next buttons available
      When Enter princygulati@yahoo.com into email
       And Enter princy123 into password
       And Click continue button
-      And Click on settings at the left side menu
+      And Click on hamburger menu
       And Click on the verification option
      Then Verify the right page opens

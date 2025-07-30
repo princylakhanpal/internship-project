@@ -3,9 +3,9 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
 from selenium.webdriver.firefox.service import Service as FirefoxService
-from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from selenium.webdriver.chrome.options import Options as ChromeOptions
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.wait import WebDriverWait
@@ -16,10 +16,27 @@ def browser_init(context, scenario_name):
     """
     :param context: Behave context
     """
-    options = ChromeOptions()
-    mobile_emulation = {"deviceName": "Nexus 5"}
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
+    bs_user = os.getenv("BROWSERSTACK_USERNAME", "princylakhanpal_jS1l5x")
+    bs_key = os.getenv("BROWSERSTACK_ACCESS_KEY", "Gyf8WsgqwyPpvyx4jwrD")
+    url = f"http://{bs_user}:{bs_key}@hub-cloud.browserstack.com/wd/hub"
+
+
+    chrome_options = ChromeOptions()
+
+    bstack_options = {
+        "deviceName": "Samsung Galaxy S20 Ultra",
+        'platformName': 'Android',
+        'interactiveDebugging': True,
+        "sessionName": scenario_name,
+        "userName": bs_user,
+        "accessKey": bs_key
+    }
+    chrome_options.set_capability("bstack:options", bstack_options)
+    chrome_options.set_capability("browserName", "Chrome")
+    #options = ChromeOptions()
+    #mobile_emulation = {"deviceName": "Nexus 5"}
+    #chrome_options = webdriver.ChromeOptions()
+    #chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
 
     ### BROWSERSTACK ###
     # Register for BrowserStack, then grab it from https://www.browserstack.com/accounts/settings
@@ -38,9 +55,9 @@ def browser_init(context, scenario_name):
     # options.set_capability('bstack:options', bstack_options)
     # context.driver = webdriver.Remote(command_executor=url, options=options)
 
-    driver_path = ChromeDriverManager().install()
-    service = Service(driver_path)
-    context.driver = webdriver.Chrome(service=service, options=options)
+    #driver_path = ChromeDriverManager().install()
+    #service = Service(driver_path)
+    #context.driver = webdriver.Chrome(service=service, options=options)
     #options = FirefoxOptions()
     #options.headless = False
     #"""Initialize headless Chrome browser."""
@@ -52,6 +69,11 @@ def browser_init(context, scenario_name):
     #service = FirefoxService(GeckoDriverManager().install())
     #context.driver = webdriver.Firefox(service=service, options=options)
     #context.driver.maximize_window()
+
+    context.driver = webdriver.Remote(
+        command_executor=url,
+        options=chrome_options
+    )
     context.driver.implicitly_wait(4)
     context.driver.wait = WebDriverWait(context.driver, 20)
     context.app = Application(context.driver)

@@ -7,7 +7,6 @@ from time import sleep
 @given('Open the main page')
 def open_main_page(context):
     context.app.reelly_project.open_main_page()
-    sleep(5)
 
 @when('Enter {email} into email')
 def input_email(context, email):
@@ -21,9 +20,9 @@ def input_password(context, password):
 def click_continue_button(context):
     context.app.reelly_project.click_continue_button()
 
-@when('Click on settings at the left side menu')
-def click_settings_menu(context):
-    context.app.reelly_project.click_settings_menu()
+@when('Click on hamburger menu')
+def click_hamburger_menu(context):
+    context.app.reelly_project.click_hamburger_menu()
 
 
 @when('Click on the verification option')
